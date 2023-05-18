@@ -1,44 +1,24 @@
-const digitToLetters = {
-  '2': 'abc',
-  '3': 'def',
-  '4': 'ghi',
-  '5': 'jkl',
-  '6': 'mno',
-  '7': 'pqrs',
-  '8': 'tuv',
-  '9': 'wxyz',
-  '0': '0',
-  '1': '1'
-};
+// This file is not to be modified. Please ignore this.
+// We will understand all of this later in the course.
+// DO NOT MODIFY THIS FILE
 
-function generateCombinations() {
-  var input = document.getElementById('input').value;
-  var combinations = [];
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser')
 
-  backtrack(combinations, '', input);
+const app = express();
 
-  var resultElement = document.getElementById('result');
-  resultElement.innerHTML = '';
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
-  for (var i = 0; i < combinations.length; i++) {
-    var li = document.createElement('li');
-    li.textContent = combinations[i];
-    resultElement.appendChild(li);
-  }
-}
+const letterCombination = require('./script');
 
-function backtrack(combinations, current, digits) {
-  if (digits.length === 0) {
-    combinations.push(current);
-    return;
-  }
+app.use(express.static(__dirname))
 
-  var letters = digitToLetters[digits[0]];
+app.post('/lettercomb',(req, res) => {
+  const input = req.body.num
+  const answer = letterCombination(input) 
+  res.send({message:JSON.stringify(answer)})
+})
 
-  for (var i = 0; i < letters.length; i++) {
-    backtrack(combinations, current + letters[i], digits.slice(1));
-  }
-}
-
-var generateBtn = document.getElementById('generateBtn');
-generateBtn.addEventListener('click', generateCombinations);
+module.exports = app;
